@@ -34,8 +34,6 @@ module.exports = NodeHelper.create({
 		const res = await fetch(this.getUrlAllLights(), { method: 'GET' });
 
 		Object.entries(await res.json()).forEach(([key, value]) => {
-			console.log(value);
-
 			allLights.push({
 				id: key,
 				name: value.name,
