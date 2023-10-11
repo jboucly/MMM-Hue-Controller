@@ -2,155 +2,138 @@
  *
  * By gueguet57
  * MIT Licensed.
-*/
+ */
 
-Module.register("MMM-Hue-Controller", {
+Module.register('MMM-Hue-Controller', {
+	defaults: {
+		bridgeIp: '',
+		user: '',
+		lightsNumArray: '',
+		themeArray: '',
+	},
 
-    
-  	defaults: {
-        bridgeIp: "",
-        user: "",
-        lightsNumArray: "",
-        themeArray: ""  
-    },
+	// CSS
+	getStyles: function () {
+		return ['MMM-Hue-Controller.css'];
+	},
 
+	turnOffLights: function () {
+		let lightArray = this.config.lightsNumArray;
+		let self = this;
 
-    // CSS
-    getStyles: function() {
-        return ['MMM-Hue-Controller.css'];
-    },
+		lightArray.forEach(function (lightNum) {
+			const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+			console.log(hueUrl);
+			self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
+		});
+	},
 
+	turnOnLights: function () {
+		let lightArray = this.config.lightsNumArray;
+		let self = this;
 
-    turnOffLights: function() {
-        let lightArray = this.config.lightsNumArray;
-        let self = this;
+		lightArray.forEach(function (lightNum) {
+			const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+			console.log(hueUrl);
+			self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
+		});
+	},
 
-        lightArray.forEach(function (lightNum) {
-            const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-            console.log(hueUrl);
-            self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
-        });
-    },
+	createOnOffButton: function (action) {
+		var button = document.createElement('button');
+		button.innerHTML = action;
+		button.className = 'hue-btn-on-off';
 
+		var self = this;
+		let lightArray = this.config.lightsNumArray;
 
-    turnOnLights: function() {
-        let lightArray = this.config.lightsNumArray;
-        let self = this;
+		button.addEventListener('click', function () {
+			switch (action) {
+				case 'Turn Off':
+					lightArray.forEach(function (lightNum) {
+						const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+						self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
+					});
+					break;
+				case 'Turn On':
+					lightArray.forEach(function (lightNum) {
+						const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+						self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
+					});
+					break;
+				default:
+				// nothing
+			}
+		});
+		return button;
+	},
 
-        lightArray.forEach(function (lightNum) {
-            const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-            console.log(hueUrl);
-            self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
-        });
-    },
+	creatThemeButton: function (theme) {
+		var button = document.createElement('button');
+		button.innerHTML = theme.themeName;
+		button.className = 'hue-btn-theme';
 
+		var self = this;
+		let lightArray = this.config.lightsNumArray;
 
-    createOnOffButton: function(action) {
+		button.addEventListener('click', function () {
+			lightArray.forEach(function (lightNum) {
+				const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
 
-  		var button = document.createElement("button");
-        button.innerHTML = action;
-        button.className = "hue-btn-on-off";
-      
-        var self = this;
-        let lightArray = this.config.lightsNumArray;    
+				changeTheme = {
+					hueUrl: hueUrl,
+					theme: theme.themeValue,
+				};
 
-  		button.addEventListener("click", function() {
-            switch(action) {
-                case "Turn Off":
-                    lightArray.forEach(function (lightNum) {
-                        const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-                        self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
-                    });
-                    break;
-                case "Turn On":
-                    lightArray.forEach(function (lightNum) {
-                        const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-                        self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
-                    });
-                    break;
-                default:
-                    // nothing
-            }
-        });
-  		return button;
-    },
+				// self.sendSocketNotification('CHANGE_THEME', hueUrl, theme);
+				self.sendSocketNotification('CHANGE_THEME', changeTheme);
+			});
+		});
 
+		return button;
+	},
 
-    creatThemeButton: function(theme) {
+	// Override dom generator.
+	getDom: function () {
+		let hueBtnWrapper = document.createElement('div');
+		hueBtnWrapper.className = 'hue-btn-ctn';
 
-        var button = document.createElement("button");
-        button.innerHTML = theme.themeName;
-        button.className = "hue-btn-theme";
+		let bueBtnWrapperFirstRow = document.createElement('div');
+		bueBtnWrapperFirstRow.className = 'hue-btn-row';
 
-        var self = this;
-        let lightArray = this.config.lightsNumArray;    
-        
-        button.addEventListener("click", function() {
-            lightArray.forEach(function (lightNum) {
-                
-                const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-                
-                changeTheme = {
-                    "hueUrl": hueUrl,
-                    "theme": theme.themeValue
-                }
+		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn Off'));
+		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn On'));
+		hueBtnWrapper.appendChild(bueBtnWrapperFirstRow);
 
-                // self.sendSocketNotification('CHANGE_THEME', hueUrl, theme);
-                self.sendSocketNotification('CHANGE_THEME', changeTheme);
-            });
-        });
+		let bueBtnWrapperSecondRow = document.createElement('div');
+		bueBtnWrapperSecondRow.className = 'hue-btn-row';
 
-        return button;
-    },
-    
-  
-  	// Override dom generator.
-  	getDom: function() {
-  		let hueBtnWrapper = document.createElement("div");
-        hueBtnWrapper.className = "hue-btn-ctn";
+		this.config.themeArray.forEach(theme => {
+			bueBtnWrapperSecondRow.appendChild(this.creatThemeButton(theme));
+		});
 
-        let bueBtnWrapperFirstRow = document.createElement("div");
-        bueBtnWrapperFirstRow.className = "hue-btn-row";
+		hueBtnWrapper.appendChild(bueBtnWrapperSecondRow);
 
-        bueBtnWrapperFirstRow.appendChild(this.createOnOffButton("Turn Off"));
-        bueBtnWrapperFirstRow.appendChild(this.createOnOffButton("Turn On"));
-        hueBtnWrapper.appendChild(bueBtnWrapperFirstRow)
+		return hueBtnWrapper;
+	},
 
-        let bueBtnWrapperSecondRow = document.createElement("div");
-        bueBtnWrapperSecondRow.className = "hue-btn-row";
+	// start
+	start: function () {
+		console.log('Starting module : MMM-Hue-Controller');
+	},
 
-        this.config.themeArray.forEach(theme => {
-            bueBtnWrapperSecondRow.appendChild(this.creatThemeButton(theme));
-        });
+	// notifications
+	socketNotificationReceived: function (notification, payload) {
+		if (notification === 'LIGHTS_TURNED_OFF') {
+			console.log('TURNED OFF');
+		}
 
-        hueBtnWrapper.appendChild(bueBtnWrapperSecondRow)
+		if (notification === 'LIGHTS_TURNED_ON') {
+			console.log('TURNED ON');
+		}
 
-  		return hueBtnWrapper;
-    },
-    
-
-    // start
-    start: function() {
-        console.log("Starting module : MMM-Hue-Controller");
-    },
-
-
-    // notifications
-    socketNotificationReceived: function(notification, payload) {
-
-        if (notification === "LIGHTS_TURNED_OFF") {
-            console.log("TURNED OFF");
-        }
-
-        if (notification === "LIGHTS_TURNED_ON") {
-            console.log("TURNED ON");
-        }
-
-        if (notification === "LIGHTS_THEME_CHANGED") {
-            console.log("THEME CHANGED");
-        }
-
-    },
-
-
+		if (notification === 'LIGHTS_THEME_CHANGED') {
+			console.log('THEME CHANGED');
+		}
+	},
 });

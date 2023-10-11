@@ -1,41 +1,41 @@
 .hue-btn-ctn {
-    display: flex;
-    flex-direction: column;
-    width: 40vmin;
-    height: 15vmin;
-    justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	width: 40vmin;
+	height: 15vmin;
+	justify-content: space-between;
 }
 
 .hue-btn-ctn .hue-btn-on-off {
-  border-radius: 0%;
-  width: 40%;
-  height: 60px;
-  color: white;
-  border: 2px solid white;
-  background-color: black;
-  font-size: large;
+	border-radius: 0%;
+	width: 40%;
+	height: 60px;
+	color: white;
+	border: 2px solid white;
+	background-color: black;
+	font-size: large;
 }
 
 .hue-btn-ctn .hue-btn-theme {
-  border-radius: 0%;
-  width: 25%;
-  height: 60px;
-  color: white;
-  border: 2px solid white;
-  background-color: black;
-  font-size: large;
+	border-radius: 0%;
+	width: 25%;
+	height: 60px;
+	color: white;
+	border: 2px solid white;
+	background-color: black;
+	font-size: large;
 }
 
 .hue-btn-ctn button:focus {
-    outline: 0;
+	outline: 0;
 }
 
 .hue-btn-ctn button:active {
-    background-color: grey;
+	background-color: grey;
 }
 
 .hue-btn-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
