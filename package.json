@@ -1,12 +1,12 @@
 {
-  "name": "MMM-Hue-Controller",
-  "version": "1.0.0",
-  "description": "Module for MagicMiror - Control your Philips Hue lamps with your touchscreen",
-  "main": "MMM-Hue-Controller.js",
-  "repository": "git@github.com:jboucly/MMM-Hue-Controller.git",
-  "author": "jboucly <julien.boucly@outlook.com>",
-  "license": "MIT",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  }
+	"name": "MMM-Hue-Controller",
+	"version": "1.0.0",
+	"description": "Module for MagicMiror - Control your Philips Hue lamps with your touchscreen",
+	"main": "MMM-Hue-Controller.js",
+	"repository": "git@github.com:jboucly/MMM-Hue-Controller.git",
+	"author": "jboucly <julien.boucly@outlook.com>",
+	"license": "MIT",
+	"dependencies": {
+		"node-fetch": "^2.7.0"
+	}
 }
