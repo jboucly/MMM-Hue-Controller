@@ -1,26 +1,38 @@
-# Module : MMM-Hue-Controller
+# MagicMirror2 Module: MMM-Hue-Controller-2
 
-**This module allows you to control your Philips Hue Lights with simple buttons.**
+```bash
 
--   Turn On Button
--   Turn Off Button
--   Custom Themes Buttons
+  __  __ __  __ __  __        _    _                    _____            _             _ _                ___
+ |  \/  |  \/  |  \/  |      | |  | |                  / ____|          | |           | | |              |__ \
+ | \  / | \  / | \  / |______| |__| |_   _  ___ ______| |     ___  _ __ | |_ _ __ ___ | | | ___ _ __ ______ ) |
+ | |\/| | |\/| | |\/| |______|  __  | | | |/ _ \______| |    / _ \| '_ \| __| '__/ _ \| | |/ _ \ '__|______/ /
+ | |  | | |  | | |  | |      | |  | | |_| |  __/      | |___| (_) | | | | |_| | | (_) | | |  __/ |        / /_
+ |_|  |_|_|  |_|_|  |_|      |_|  |_|\__,_|\___|       \_____\___/|_| |_|\__|_|  \___/|_|_|\___|_|       |____|
 
-![screenshot](assets/MMM-Hue-Controller-screenshot.png)
+
+
+```
+
+## Description
+
+This project is a fork from [MMM-Hue-Controller](https://github.com/gueguet/MMM-Hue-Controller) !
+
+![screenshot](assets/MMM-Hue-Controller-2-screenshot.png)
+
+## Feature
+
+-   [x] List all light with button
+-   [x] Interaction with light (ON / OFF) from a button
+-   [ ] Interaction with lights from an event / notification from another MagicMirror2 module
+-   [ ] Change the brightness
+-   [ ] Set color
+-   [ ] Set theme
 
 ## Table of contents
 
--   [Installing the module](#installing-the-module)
 -   [Prerequisites](#prerequisites)
-    -   [Gather the lights you want to control](#gather-the-lights-you-want-to-control)
+-   [Installation](#installation)
     -   [Using the module](#using-the-module)
--   [Create a custom theme](#create-a-custom-theme)
-
-## Installing the Module
-
-Inside your modules folder, execute :
-
-> git clone https://github.com/gueguet/MMM-Hue-Controller
 
 ### Prerequisites
 
@@ -32,101 +44,31 @@ You basically need three things to make the module working :
     _You can get it with Angry IP Scanner to retrieve it for instance_
 -   An authorized username to use the API, follow instructions here : https://developers.meethue.com/develop/get-started-2/
     _This username is permanent so no need to refresh it or whatever_
--   A list of integers that represents the lights you want to control
-    _More info in the next point_
 
-### Gather the lights you want to control
+## Installation
 
-_This module is not for monitoring the status of all the lights in your home (if that's your purpose, check this cool module : https://github.com/michael5r/mmm-hue-lights)_
+Inside your modules folder, execute :
 
-To get all the lights available in your home, you can do a GET request on this endpoint :
+```bash
 
-> <IP_OF_YOUR_HUE_BRIDGE>/api/<AUTHORIZED_USER>/lights
+$ git clone https://github.com/jboucly/MMM-Hue-Controller-2
 
-The response looks like :
+$ cd MMM-Hue-Controller-2
 
-> {
-> 1: {
-> "state": ...
-> "name": ...
-> ...
-> },
-> 2: {
-> "state":...
-> "name"...
-> ...
-> },
-> ...
-> }
-
-Based on the response, indentify the lamps you want to monitor and keep their integers (keys of the JSON) in mind !
+$ npm install # Install dependencies
+```
 
 ## Using the module
 
 In the `config/config.js` file, just add this to the `modules` array :
-_To learn more about custom themes, please check the next point of this documentation_
 
 ```js
 {
-    module: "MMM-Hue-Controller",
+    module: "MMM-Hue-Controller-2",
     position: "top_right",
     config: {
         bridgeIp: "<IP_OF_YOUR_HUE_BRIDGE>",
         user: "<AUTHORIZED_USER>",
-        lightsNumArray: ["<INT_LIGHT_1>","<INT_LIGHT_2"], // array of strings | keys of the targeted lights | example : ["2","5","6"]
-        themeArray: [
-            {
-                "themeName": "Zelda", // will be the text content of the theme button
-                "themeValue": {
-                    "bri": 254, // bright
-                    "hue": 40425, // hue
-                    "sat": 196 // saturation
-                }
-            },
-            {
-                "themeName": "Purple Swag", // example of another custom theme
-                "themeValue": {
-                    "bri": 254,
-                    "hue": 49361,
-                    "sat": 178,
-                }
-            },
-            {
-                ...
-            }
-        ]
     }
 },
-```
-
-## Create a custom theme
-
-As you can see, you can add custom theme inside the themeArray. But the HSB (hue, bright, saturation) system can be a bit tricky, here is what I suggest to do :
-_Feel free to sugest me other methods to make this step easier !_
-
-You can use the official Hue app to choose the color you want to have in your scene, and then hit this endpoint to retrieve the HSB values :
-
-> <IP_OF_YOUR_HUE_BRIDGE>/api/<AUTHORIZED_USER>/lights/<INT_OF_LIGHT>
-
-In the response you will get something like this, just retrive the HSB values and paste it to the `config.js` files, as it's done in the provided examples.
-
-```js
-    {
-        "state": {
-            "on": false,
-            "bri": 254, // bright
-            "hue": 49361, // hue
-            "sat": 178, // saturation
-            "effect": "none",
-            "xy": [
-                0.2674,
-                0.1684
-            ],
-            "ct": 153,
-            "alert": "none",
-            "colormode": "hs",
-            "mode": "homeautomation",
-            "reachable": true
-        },
-    }
 ```

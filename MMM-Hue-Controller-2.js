@@ -1,4 +1,4 @@
-Module.register('MMM-Hue-Controller', {
+Module.register('MMM-Hue-Controller-2', {
 	defaults: {
 		user: '',
 		bridgeIp: '',
