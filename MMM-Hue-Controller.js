@@ -12,32 +12,76 @@ Module.register('MMM-Hue-Controller', {
 		themeArray: '',
 	},
 
-	// CSS
+	start: function () {
+		console.log('Starting module : MMM-Hue-Controller');
+		this.sendSocketNotification('CONFIGS', this.config);
+	},
+
+	socketNotificationReceived: function (notification, payload) {
+		switch (notification) {
+			case 'LIGHTS_TURNED_OFF':
+				console.info('[Hue] - TURNED OFF');
+				break;
+			case 'LIGHTS_TURNED_ON':
+				console.info('[Hue] - TURNED ON');
+				break;
+			case 'LIGHTS_THEME_CHANGED':
+				console.info('[Hue] - THEME CHANGED');
+				break;
+			case 'GET_CONFIGS':
+				this.sendSocketNotification('CONFIGS', this.config);
+				break;
+		}
+	},
+
+	getDom: function () {
+		let hueBtnWrapper = document.createElement('div');
+		hueBtnWrapper.className = 'hue-btn-ctn';
+
+		let bueBtnWrapperFirstRow = document.createElement('div');
+		bueBtnWrapperFirstRow.className = 'hue-btn-row';
+
+		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn Off'));
+		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn On'));
+		hueBtnWrapper.appendChild(bueBtnWrapperFirstRow);
+
+		let bueBtnWrapperSecondRow = document.createElement('div');
+		bueBtnWrapperSecondRow.className = 'hue-btn-row';
+
+		this.config.themeArray.forEach(theme => {
+			bueBtnWrapperSecondRow.appendChild(this.createThemeButton(theme));
+		});
+
+		hueBtnWrapper.appendChild(bueBtnWrapperSecondRow);
+
+		return hueBtnWrapper;
+	},
+
 	getStyles: function () {
 		return ['MMM-Hue-Controller.css'];
 	},
 
-	turnOffLights: function () {
-		let lightArray = this.config.lightsNumArray;
-		let self = this;
+	// turnOffLights: function () {
+	// 	let lightArray = this.config.lightsNumArray;
+	// 	let self = this;
 
-		lightArray.forEach(function (lightNum) {
-			const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-			console.log(hueUrl);
-			self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
-		});
-	},
+	// 	lightArray.forEach(function (lightNum) {
+	// 		const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+	// 		console.log(hueUrl);
+	// 		self.sendSocketNotification('TURN_OFF_LIGHTS', hueUrl);
+	// 	});
+	// },
 
-	turnOnLights: function () {
-		let lightArray = this.config.lightsNumArray;
-		let self = this;
+	// turnOnLights: function () {
+	// 	let lightArray = this.config.lightsNumArray;
+	// 	let self = this;
 
-		lightArray.forEach(function (lightNum) {
-			const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
-			console.log(hueUrl);
-			self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
-		});
-	},
+	// 	lightArray.forEach(function (lightNum) {
+	// 		const hueUrl = `http://${self.config.bridgeIp}/api/${self.config.user}/lights/${lightNum}/state`;
+	// 		console.log(hueUrl);
+	// 		self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
+	// 	});
+	// },
 
 	createOnOffButton: function (action) {
 		var button = document.createElement('button');
@@ -61,20 +105,20 @@ Module.register('MMM-Hue-Controller', {
 						self.sendSocketNotification('TURN_ON_LIGHTS', hueUrl);
 					});
 					break;
-				default:
-				// nothing
 			}
 		});
 		return button;
 	},
 
-	creatThemeButton: function (theme) {
+	createThemeButton: function (theme) {
 		var button = document.createElement('button');
 		button.innerHTML = theme.themeName;
 		button.className = 'hue-btn-theme';
 
 		var self = this;
 		let lightArray = this.config.lightsNumArray;
+
+		let changeTheme;
 
 		button.addEventListener('click', function () {
 			lightArray.forEach(function (lightNum) {
@@ -91,49 +135,5 @@ Module.register('MMM-Hue-Controller', {
 		});
 
 		return button;
-	},
-
-	// Override dom generator.
-	getDom: function () {
-		let hueBtnWrapper = document.createElement('div');
-		hueBtnWrapper.className = 'hue-btn-ctn';
-
-		let bueBtnWrapperFirstRow = document.createElement('div');
-		bueBtnWrapperFirstRow.className = 'hue-btn-row';
-
-		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn Off'));
-		bueBtnWrapperFirstRow.appendChild(this.createOnOffButton('Turn On'));
-		hueBtnWrapper.appendChild(bueBtnWrapperFirstRow);
-
-		let bueBtnWrapperSecondRow = document.createElement('div');
-		bueBtnWrapperSecondRow.className = 'hue-btn-row';
-
-		this.config.themeArray.forEach(theme => {
-			bueBtnWrapperSecondRow.appendChild(this.creatThemeButton(theme));
-		});
-
-		hueBtnWrapper.appendChild(bueBtnWrapperSecondRow);
-
-		return hueBtnWrapper;
-	},
-
-	// start
-	start: function () {
-		console.log('Starting module : MMM-Hue-Controller');
-	},
-
-	// notifications
-	socketNotificationReceived: function (notification, payload) {
-		if (notification === 'LIGHTS_TURNED_OFF') {
-			console.log('TURNED OFF');
-		}
-
-		if (notification === 'LIGHTS_TURNED_ON') {
-			console.log('TURNED ON');
-		}
-
-		if (notification === 'LIGHTS_THEME_CHANGED') {
-			console.log('THEME CHANGED');
-		}
 	},
 });
