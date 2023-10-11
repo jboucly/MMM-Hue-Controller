@@ -4,79 +4,58 @@ const CheckUtils = require('./utils/check.utils');
 
 module.exports = NodeHelper.create({
 	...CheckUtils,
-
 	configs: undefined,
 
 	init: function () {
 		console.log('MMM-Hue-Controller module helper initialized.');
 	},
 
-	socketNotificationReceived: function (notification, payload) {
+	socketNotificationReceived: async function (notification, payload) {
 		switch (notification) {
-			case 'TURN_OFF_LIGHTS':
-				this.turnOffAllLights(payload);
+			case 'TURN_OFF_LIGHT':
+				await this.turnOffOrOnLights(payload, false);
 				break;
-			case 'TURN_ON_LIGHTS':
-				this.turnOnAllLights(payload);
-				break;
-			case 'CHANGE_THEME':
-				this.changeThemeAllLights(payload);
+			case 'TURN_ON_LIGHT':
+				await this.turnOffOrOnLights(payload, true);
 				break;
 			case 'CONFIGS':
 				this.configs = payload;
 				break;
+			case 'GET_ALL_LIGHTS':
+				await this.sendAllLights();
+				break;
 		}
 	},
 
-	turnOffAllLights: function (url) {
+	sendAllLights: async function () {
 		var self = this;
-		this.checkConfigExist();
+		const allLights = [];
 
-		fetch(url, {
-			method: 'PUT',
-			body: JSON.stringify({
-				on: false,
-			}),
-		})
-			.then(results => {
-				self.sendSocketNotification('LIGHTS_TURNED_OFF', results);
-			})
-			.catch(error => {
-				self.sendSocketNotification('LIGHTS_TURNED_OFF', error);
+		const res = await fetch(this.getUrlAllLights(), { method: 'GET' });
+
+		Object.entries(await res.json()).forEach(([key, value]) => {
+			console.log(value);
+
+			allLights.push({
+				id: key,
+				name: value.name,
+				on: value.state.on,
 			});
+		});
+
+		self.sendSocketNotification('LIGHTS_LIST', allLights);
 	},
 
-	turnOnAllLights: function (url) {
-		let self = this;
-		this.checkConfigExist();
-
-		fetch(url, {
-			method: 'PUT',
-			body: JSON.stringify({
-				on: true,
-			}),
-		})
-			.then(results => {
-				self.sendSocketNotification('LIGHTS_TURNED_ON', results);
-			})
-			.catch(error => {
-				self.sendSocketNotification('LIGHTS_TURNED_ON', error);
+	turnOffOrOnLights: async function (id, state) {
+		try {
+			await fetch(this.getUrlToTurnOffLights(id), {
+				method: 'PUT',
+				body: JSON.stringify({
+					on: state,
+				}),
 			});
-	},
-
-	changeThemeAllLights: function (changeTheme) {
-		let self = this;
-		this.checkConfigExist();
-
-		fetch(changeTheme.hueUrl, {
-			method: 'PUT',
-			body: JSON.stringify(changeTheme.theme),
-		})
-			.then(results => {
-				self.sendSocketNotification('LIGHTS_THEME_CHANGED', results);
-			})
-			.catch(error => {
-				self.sendSocketNotification('LIGHTS_THEME_CHANGED', error);
-			});
+		} catch (error) {
+			console.error(error);
+		}
 	},
 });
