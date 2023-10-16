@@ -4,11 +4,33 @@ Module.register('MMM-Hue-Controller-2', {
 		bridgeIp: '',
 	},
 	lightsList: [],
+	lightsListRequested: false,
 
 	start: function () {
 		console.log('Starting module : MMM-Hue-Controller');
 		this.sendSocketNotification('CONFIGS', this.config);
 		this.sendSocketNotification('GET_ALL_LIGHTS');
+	},
+
+	notificationReceived: function (notification, payload, sender) {
+		switch (notification) {
+			case 'HUE_GET_ALL_LIGHTS':
+				if (this.lightsList?.length === 0) {
+					this.sendSocketNotification('GET_ALL_LIGHTS');
+					this.lightsListRequested = true;
+				} else {
+					this.sendNotification('HUE_LIGHTS_LIST', this.lightsList);
+				}
+				break;
+			case 'HUE_TURN_ON_LIGHT':
+				this.sendSocketNotification('TURN_ON_LIGHT', this.checkPayloadOonOffIsString(payload));
+				this.updateDom();
+				break;
+			case 'HUE_TURN_OFF_LIGHT':
+				this.sendSocketNotification('TURN_OFF_LIGHT', this.checkPayloadOonOffIsString(payload));
+				this.updateDom();
+				break;
+		}
 	},
 
 	socketNotificationReceived: function (notification, payload) {
@@ -19,6 +41,11 @@ Module.register('MMM-Hue-Controller-2', {
 			case 'LIGHTS_LIST':
 				this.lightsList = payload;
 				this.updateDom();
+
+				if (this.lightsListRequested) {
+					this.lightsListRequested = false;
+					this.sendNotification('HUE_LIGHTS_LIST', this.lightsList);
+				}
 				break;
 		}
 	},
@@ -63,5 +90,15 @@ Module.register('MMM-Hue-Controller-2', {
 		});
 
 		return button;
+	},
+
+	// ——— UTILS ———————————————————————————————————————————————————————————
+
+	checkPayloadOonOffIsString: function (payload) {
+		if (typeof payload === 'string') {
+			return payload;
+		} else {
+			throw new Error('Payload to switch on/off is not a string');
+		}
 	},
 });
