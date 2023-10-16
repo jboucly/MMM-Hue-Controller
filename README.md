@@ -23,7 +23,7 @@ This project is a fork from [MMM-Hue-Controller](https://github.com/gueguet/MMM-
 
 -   [x] List all light with button
 -   [x] Interaction with light (ON / OFF) from a button
--   [ ] Interaction with lights from an event / notification from another MagicMirror2 module
+-   [x] Interaction with lights from an event / notification from another MagicMirror2 module
 -   [ ] Change the brightness
 -   [ ] Set color
 -   [ ] Set theme
@@ -72,3 +72,24 @@ In the `config/config.js` file, just add this to the `modules` array :
     }
 },
 ```
+
+## Notifications
+
+You can interact with the module, it has several notification points :
+
+**Send notification :**
+
+-   `HUE_GET_ALL_LIGHTS` : Request to receive all lights from the bridge
+-   `HUE_TURN_ON_LIGHT` : Turn on a light, pass id in payload
+-   `HUE_TURN_OFF_LIGHT` : Turn off a light, pass id in payload
+
+Example :
+
+```javascript
+this.sendNotification('HUE_TURN_ON_LIGHT', '1');
+```
+
+**Received notification :**
+
+-   `HUE_LIGHTS_LIST` : Received all lights from the bridge.
+    Payload : `[{ id: '1', name: 'NameOfLight', on: false }];`
