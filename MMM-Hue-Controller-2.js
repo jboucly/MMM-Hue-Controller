@@ -10,6 +10,11 @@ Module.register('MMM-Hue-Controller-2', {
 		console.log('Starting module : MMM-Hue-Controller');
 		this.sendSocketNotification('CONFIGS', this.config);
 		this.sendSocketNotification('GET_ALL_LIGHTS');
+
+		// Refresh DOM every 10 seconds for update lights status
+		setInterval(() => {
+			this.sendSocketNotification('GET_ALL_LIGHTS');
+		}, 10000);
 	},
 
 	notificationReceived: function (notification, payload, sender) {
@@ -24,11 +29,9 @@ Module.register('MMM-Hue-Controller-2', {
 				break;
 			case 'HUE_TURN_ON_LIGHT':
 				this.sendSocketNotification('TURN_ON_LIGHT', this.checkPayloadOonOffIsString(payload));
-				this.updateDom();
 				break;
 			case 'HUE_TURN_OFF_LIGHT':
 				this.sendSocketNotification('TURN_OFF_LIGHT', this.checkPayloadOonOffIsString(payload));
-				this.updateDom();
 				break;
 		}
 	},

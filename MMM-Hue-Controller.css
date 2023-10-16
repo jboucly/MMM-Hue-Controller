@@ -2,10 +2,12 @@
 	width: 100%;
 	display: flex;
 	align-items: center;
+	flex-flow: row wrap;
 	justify-content: space-evenly;
 }
 
 .hue-btn-on-off {
+	width: 12%;
 	height: 60px;
 	color: white;
 	font-size: large;

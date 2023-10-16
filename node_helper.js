@@ -3,8 +3,8 @@ const fetch = require('node-fetch');
 const CheckUtils = require('./utils/check.utils');
 
 module.exports = NodeHelper.create({
-	...CheckUtils,
 	configs: undefined,
+	...CheckUtils,
 
 	init: function () {
 		console.log('MMM-Hue-Controller module helper initialized.');
@@ -12,17 +12,17 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived: async function (notification, payload) {
 		switch (notification) {
-			case 'TURN_OFF_LIGHT':
-				await this.turnOffOrOnLights(payload, false);
-				break;
-			case 'TURN_ON_LIGHT':
-				await this.turnOffOrOnLights(payload, true);
-				break;
 			case 'CONFIGS':
 				this.configs = payload;
 				break;
 			case 'GET_ALL_LIGHTS':
 				await this.sendAllLights();
+				break;
+			case 'TURN_OFF_LIGHT':
+				await this.turnOffOrOnLights(payload, false);
+				break;
+			case 'TURN_ON_LIGHT':
+				await this.turnOffOrOnLights(payload, true);
 				break;
 		}
 	},
