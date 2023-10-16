@@ -1,5 +1,6 @@
-var NodeHelper = require('node_helper');
+const Log = require('logger');
 const fetch = require('node-fetch');
+const NodeHelper = require('node_helper');
 const CheckUtils = require('./utils/check.utils');
 
 module.exports = NodeHelper.create({
@@ -7,7 +8,7 @@ module.exports = NodeHelper.create({
 	...CheckUtils,
 
 	init: function () {
-		console.log('MMM-Hue-Controller module helper initialized.');
+		Log.info('MMM-Hue-Controller-2 module helper initialized.');
 	},
 
 	socketNotificationReceived: async function (notification, payload) {
@@ -53,7 +54,7 @@ module.exports = NodeHelper.create({
 				}),
 			});
 		} catch (error) {
-			console.error(error);
+			Log.error(error);
 		}
 	},
 });

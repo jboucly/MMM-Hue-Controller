@@ -7,7 +7,7 @@ Module.register('MMM-Hue-Controller-2', {
 	lightsListRequested: false,
 
 	start: function () {
-		console.log('Starting module : MMM-Hue-Controller');
+		Log.info('Starting module : MMM-Hue-Controller-2');
 		this.sendSocketNotification('CONFIGS', this.config);
 		this.sendSocketNotification('GET_ALL_LIGHTS');
 
