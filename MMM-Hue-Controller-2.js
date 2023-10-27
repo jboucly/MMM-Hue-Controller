@@ -5,8 +5,8 @@
 
 Module.register('MMM-Hue-Controller-2', {
 	defaults: {
-		user: '',
-		bridgeIp: '',
+		user: null,
+		bridgeIp: null,
 		colors: [
 			'#FF0000', // Red
 			'#00FF00', // Green
