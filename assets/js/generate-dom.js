@@ -1,7 +1,6 @@
 class GenerateDom {
 	constructor(selfModule) {
 		this.module = selfModule;
-
 		this.moduleContainer = null;
 	}
 

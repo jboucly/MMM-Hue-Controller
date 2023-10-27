@@ -1,8 +1,26 @@
+// ################################################################ \\
+// # 				     MMM-Hue-Controller-2					  # \\
+// # 				   Control your Philips Hue					  # \\
+// ################################################################ \\
+
 Module.register('MMM-Hue-Controller-2', {
 	defaults: {
 		user: '',
 		bridgeIp: '',
-		colors: ['#ff0000', '#40A347', '#2DA7E4', '#FF00FF', '#50e8ff', '#94c930', '#86bc39'],
+		colors: [
+			'#FF0000', // Red
+			'#00FF00', // Green
+			'#0000FF', // Blue
+			'#FFFF00', // Yellow
+			'#00FFFF', // Cyan
+			'#FF00FF', // Magenta
+			'#FFFFFF', // White
+			'#FFA500', // Orange
+			'#FF1493', // Pink
+			'#8A2BE2', // Purple
+			'#40E0D0', // Turquoise
+			'#FFD700', // Gold
+		],
 	},
 	lightsList: [],
 	lightsListRequested: false,
@@ -29,9 +47,9 @@ Module.register('MMM-Hue-Controller-2', {
 		this.sendSocketNotification('GET_ALL_LIGHTS');
 
 		// Refresh DOM every 10 seconds for update lights status
-		// setInterval(() => {
-		// 	this.sendSocketNotification('GET_ALL_LIGHTS');
-		// }, 10000);
+		setInterval(() => {
+			this.sendSocketNotification('GET_ALL_LIGHTS');
+		}, 10000);
 	},
 
 	notificationReceived: function (notification, payload, sender) {
@@ -49,6 +67,12 @@ Module.register('MMM-Hue-Controller-2', {
 				break;
 			case 'HUE_TURN_OFF_LIGHT':
 				this.sendSocketNotification('TURN_OFF_LIGHT', this.checkPayloadOonOffIsString(payload));
+				break;
+			case 'HUE_CHANGE_BRIGHTNESS':
+				this.sendSocketNotification('CHANGE_BRIGHTNESS', this.checkPayloadChangeBrightness(payload));
+				break;
+			case 'HUE_CHANGE_COLOR':
+				this.sendSocketNotification('CHANGE_COLOR', this.checkPayloadChangeColor(payload));
 				break;
 		}
 	},
@@ -88,6 +112,30 @@ Module.register('MMM-Hue-Controller-2', {
 			return payload;
 		} else {
 			throw new Error('Payload to switch on/off is not a string');
+		}
+	},
+
+	checkPayloadChangeBrightness: function (payload) {
+		if (typeof payload === 'object' && payload.id && payload.brightness) {
+			if (payload.brightness < 0 || payload.brightness > 254) {
+				throw new Error('Brightness must be between 0 and 254');
+			}
+
+			return payload;
+		} else {
+			throw new Error('Payload to change brightness is not an object with id and brightness');
+		}
+	},
+
+	checkPayloadChangeColor: function (payload) {
+		if (typeof payload === 'object' && payload.id && payload.color) {
+			if (!payload.color.startsWith('#')) {
+				throw new Error('Color must be a hex color');
+			}
+
+			return payload;
+		} else {
+			throw new Error('Payload to change color is not an object with id and color');
 		}
 	},
 });
