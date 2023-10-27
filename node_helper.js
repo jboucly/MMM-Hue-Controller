@@ -117,6 +117,7 @@ module.exports = NodeHelper.create({
 			await fetch(this.getUrlToChangeStateOfLight(payload.id), {
 				method: 'PUT',
 				body: JSON.stringify({
+					on: true,
 					bri: brightness,
 				}),
 			});
@@ -130,6 +131,7 @@ module.exports = NodeHelper.create({
 			await fetch(this.getUrlToChangeStateOfLight(payload.id), {
 				method: 'PUT',
 				body: JSON.stringify({
+					on: true,
 					xy: this.hexToXY(payload.color),
 				}),
 			});

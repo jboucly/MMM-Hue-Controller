@@ -4,11 +4,12 @@
 }
 
 .color-btn {
-	top: 50%;
+	top: 80%;
 	width: 50px;
 	height: 50px;
-	position: sticky;
 	cursor: pointer;
+	position: sticky;
+	margin-right: 5px;
 	border-radius: 50%;
 }
 
@@ -21,8 +22,8 @@
 
 .slider-container {
 	top: 50%;
-	width: 90px;
-	height: 200px;
+	width: 60px;
+	height: 160px;
 	overflow: hidden;
 	user-select: none;
 	border-radius: 50px;
@@ -58,7 +59,7 @@
 }
 
 .slider-label {
-	top: -110px;
+	top: -95px;
 	text-align: center;
 	position: relative;
 }

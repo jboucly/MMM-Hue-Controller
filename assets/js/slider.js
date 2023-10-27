@@ -159,6 +159,14 @@ class Slider {
 				id: this.light.id,
 				brightness: newValue,
 			});
+
+			if (!this.light.on) {
+				this.slider.style.setProperty(
+					'--slider-background',
+					`linear-gradient(to top, ${this.light.color}, rgba(247, 255, 165, 1) 100%)`
+				);
+				this.light.on = true;
+			}
 		}
 	}
 
@@ -179,7 +187,7 @@ class Slider {
 				this.module.sendSocketNotification('TURN_ON_LIGHT', this.light.id);
 				this.slider.style.setProperty(
 					'--slider-background',
-					'linear-gradient(to top, rgba(242, 247, 0, 1) 0%, rgba(247, 255, 165, 1) 100%)'
+					`linear-gradient(to top, ${this.light.color}, rgba(247, 255, 165, 1) 100%)`
 				);
 			}
 
