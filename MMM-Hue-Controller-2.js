@@ -2,7 +2,7 @@ Module.register('MMM-Hue-Controller-2', {
 	defaults: {
 		user: '',
 		bridgeIp: '',
-		color: ['#78cff2', '#2da7e4', '#f2bba0', '#f3c39a', '#50e8ff', '#94c930', '#86bc39'],
+		colors: ['#ff0000', '#40A347', '#2DA7E4', '#FF00FF', '#50e8ff', '#94c930', '#86bc39'],
 	},
 	lightsList: [],
 	lightsListRequested: false,
@@ -18,7 +18,7 @@ Module.register('MMM-Hue-Controller-2', {
 	getScripts: function () {
 		return [
 			this.file('./assets/js/slider.js'),
-			this.file('./assets/js/modal.js'),
+			this.file('./assets/js/color-modal.js'),
 			this.file('./assets/js/generate-dom.js'),
 		];
 	},
@@ -29,9 +29,9 @@ Module.register('MMM-Hue-Controller-2', {
 		this.sendSocketNotification('GET_ALL_LIGHTS');
 
 		// Refresh DOM every 10 seconds for update lights status
-		// setInterval(() => {
-		// 	this.sendSocketNotification('GET_ALL_LIGHTS');
-		// }, 10000);
+		setInterval(() => {
+			this.sendSocketNotification('GET_ALL_LIGHTS');
+		}, 10000);
 	},
 
 	notificationReceived: function (notification, payload, sender) {

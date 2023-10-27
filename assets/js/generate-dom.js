@@ -1,19 +1,19 @@
 class GenerateDom {
 	constructor(selfModule) {
 		this.module = selfModule;
+
+		this.moduleContainer = null;
 	}
 
 	createDom() {
-		const container = document.createElement('div');
-		container.className = 'flex-container';
+		this.moduleContainer = document.createElement('div');
+		this.moduleContainer.className = 'flex-container';
 
 		this.module.lightsList.forEach(light => {
-			container.appendChild(this.createLight(light));
+			this.moduleContainer.appendChild(this.createLight(light));
 		});
 
-		container.appendChild(this.createModal());
-
-		return container;
+		return this.moduleContainer;
 	}
 
 	createLight(light) {
@@ -22,9 +22,12 @@ class GenerateDom {
 
 		const button = document.createElement('button');
 		button.type = 'button';
-		button.id = 'btn-modal';
+		button.id = `btn-modal-${light.id}`;
 		button.className = 'color-btn';
 		button.setAttribute('on', light.on);
+
+		// eslint-disable-next-line no-undef
+		this.moduleContainer.appendChild(new ColorModal(this.module, button, light).createModal());
 
 		const img = document.createElement('img');
 		img.src = this.module.file('./assets/imgs/palet-color.svg');
@@ -39,36 +42,5 @@ class GenerateDom {
 		lightContainer.appendChild(sliderContainer);
 
 		return lightContainer;
-	}
-
-	createModal() {
-		const modal = document.createElement('div');
-		modal.id = 'color-modal';
-		modal.className = 'modal';
-
-		const modalTitle = document.createElement('div');
-		modalTitle.className = 'modal-title';
-		modalTitle.innerHTML = 'Choose a color';
-
-		const closeSpan = document.createElement('span');
-		closeSpan.className = 'close';
-		closeSpan.innerHTML = '&times;';
-		closeSpan.addEventListener('click', () => {
-			modal.style.display = 'none';
-		});
-
-		modalTitle.appendChild(closeSpan);
-		modal.appendChild(modalTitle);
-
-		const modalContent = document.createElement('div');
-		modalContent.className = 'modal-content';
-
-		const modalContainer = document.createElement('div');
-		modalContainer.id = 'modal-container';
-
-		modalContent.appendChild(modalContainer);
-		modal.appendChild(modalContent);
-
-		return modal;
 	}
 }

@@ -2,10 +2,12 @@ const Log = require('logger');
 const fetch = require('node-fetch');
 const NodeHelper = require('node_helper');
 const CheckUtils = require('./utils/check.utils');
+const HueUtils = require('./utils/hue.utils');
 
 module.exports = NodeHelper.create({
 	configs: undefined,
 	...CheckUtils,
+	...HueUtils,
 
 	init: function () {
 		Log.info('MMM-Hue-Controller-2 module helper initialized.');
@@ -28,6 +30,9 @@ module.exports = NodeHelper.create({
 			case 'CHANGE_BRIGHTNESS':
 				await this.changeBrightness(payload);
 				break;
+			case 'CHANGE_COLOR':
+				await this.changeColor(payload);
+				break;
 		}
 	},
 
@@ -38,11 +43,13 @@ module.exports = NodeHelper.create({
 		const res = await fetch(this.getUrlAllLights(), { method: 'GET' });
 
 		Object.entries(await res.json()).forEach(([key, value]) => {
+			console.log(value.state.xy);
 			allLights.push({
 				id: key,
 				name: value.name,
 				on: value.state.on,
 				brightness: value.state.bri,
+				color: this.xyToHex(value.state.xy[0], value.state.xy[1]),
 				type: value.type.includes('Extended color light') ? 'color' : 'white',
 			});
 		});
@@ -110,6 +117,19 @@ module.exports = NodeHelper.create({
 				method: 'PUT',
 				body: JSON.stringify({
 					bri: brightness,
+				}),
+			});
+		} catch (error) {
+			Log.error(error);
+		}
+	},
+
+	changeColor: async function (payload) {
+		try {
+			await fetch(this.getUrlToChangeStateOfLight(payload.id), {
+				method: 'PUT',
+				body: JSON.stringify({
+					xy: this.hexToXY(payload.color),
 				}),
 			});
 		} catch (error) {

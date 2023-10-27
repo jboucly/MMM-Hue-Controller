@@ -26,7 +26,7 @@ class Slider {
 
 		this.slider.style.setProperty(
 			'--slider-background',
-			!this.light.on ? 'grey' : 'linear-gradient(to top, rgba(242, 247, 0, 1) 0%, rgba(247, 255, 165, 1) 100%)'
+			!this.light.on ? 'grey' : `linear-gradient(to top, ${this.light.color} 0%, rgba(255, 255, 255, 1) 100%)`
 		);
 
 		sliderContainer.appendChild(this.slider);
@@ -89,12 +89,17 @@ class Slider {
 	}
 
 	addEvents() {
-		this.colorChangeEvent = document.addEventListener('colorChange', e => {
+		this.colorChangeEvent = document.addEventListener(`changeColor${this.light.id}`, e => {
 			const color = e.detail;
 			this.slider.style.setProperty(
 				'--slider-background',
 				`linear-gradient(to top, ${color} 0%, rgba(255, 255, 255, 1) 100%)`
 			);
+
+			this.module.sendSocketNotification('CHANGE_COLOR', {
+				id: this.light.id,
+				color,
+			});
 		});
 
 		this.addMouseEvents();
