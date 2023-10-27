@@ -8,7 +8,7 @@ class GenerateDom {
 		container.className = 'flex-container';
 
 		this.module.lightsList.forEach(light => {
-			container.appendChild(this.createOnOffButton(light));
+			container.appendChild(this.createLight(light));
 		});
 
 		container.appendChild(this.createModal());
@@ -16,26 +16,41 @@ class GenerateDom {
 		return container;
 	}
 
-	createOnOffButton(light) {
-		const self = this;
-		var button = document.createElement('button');
+	createLight(light) {
+		const lightContainer = document.createElement('div');
+		lightContainer.className = 'btn-group';
 
-		button.innerHTML = light.name;
-		button.className = 'hue-btn-on-off';
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.id = 'btn-modal';
+		button.className = 'color-btn';
 		button.setAttribute('on', light.on);
 
-		button.addEventListener('click', function () {
-			if (light.on) {
-				self.module.sendSocketNotification('TURN_OFF_LIGHT', light.id);
-				light.on = false;
-			} else {
-				self.module.sendSocketNotification('TURN_ON_LIGHT', light.id);
-				light.on = true;
-			}
-			button.setAttribute('on', light.on);
-		});
+		const img = document.createElement('img');
+		img.src = this.module.file('./assets/imgs/palet-color.svg');
+		img.alt = 'palet-color';
+		img.className = 'img-palet-color';
 
-		return button;
+		button.appendChild(img);
+		lightContainer.appendChild(button);
+
+		// eslint-disable-next-line no-undef
+		const sliderContainer = new Slider(this.module, light).createSlider();
+
+		lightContainer.appendChild(sliderContainer);
+
+		// button.addEventListener('click', function () {
+		// 	if (light.on) {
+		// 		self.module.sendSocketNotification('TURN_OFF_LIGHT', light.id);
+		// 		light.on = false;
+		// 	} else {
+		// 		self.module.sendSocketNotification('TURN_ON_LIGHT', light.id);
+		// 		light.on = true;
+		// 	}
+		// 	button.setAttribute('on', light.on);
+		// });
+
+		return lightContainer;
 	}
 
 	createModal() {

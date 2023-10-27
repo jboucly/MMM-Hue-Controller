@@ -39,6 +39,7 @@ module.exports = NodeHelper.create({
 				id: key,
 				name: value.name,
 				on: value.state.on,
+				brightness: value.state.bri,
 				type: value.type.includes('Extended color light') ? 'color' : 'white',
 			});
 		});

@@ -17,9 +17,9 @@ Module.register('MMM-Hue-Controller-2', {
 
 	getScripts: function () {
 		return [
-			this.file('./assets/js/generate-dom.js'),
-			this.file('./assets/js/modal.js'),
 			this.file('./assets/js/slider.js'),
+			this.file('./assets/js/modal.js'),
+			this.file('./assets/js/generate-dom.js'),
 		];
 	},
 
@@ -29,9 +29,9 @@ Module.register('MMM-Hue-Controller-2', {
 		this.sendSocketNotification('GET_ALL_LIGHTS');
 
 		// Refresh DOM every 10 seconds for update lights status
-		setInterval(() => {
-			this.sendSocketNotification('GET_ALL_LIGHTS');
-		}, 10000);
+		// setInterval(() => {
+		// 	this.sendSocketNotification('GET_ALL_LIGHTS');
+		// }, 10000);
 	},
 
 	notificationReceived: function (notification, payload, sender) {
