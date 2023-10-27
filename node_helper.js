@@ -43,14 +43,15 @@ module.exports = NodeHelper.create({
 		const res = await fetch(this.getUrlAllLights(), { method: 'GET' });
 
 		Object.entries(await res.json()).forEach(([key, value]) => {
-			console.log(value.state.xy);
 			allLights.push({
 				id: key,
 				name: value.name,
 				on: value.state.on,
 				brightness: value.state.bri,
-				color: this.xyToHex(value.state.xy[0], value.state.xy[1]),
 				type: value.type.includes('Extended color light') ? 'color' : 'white',
+				color: value.type.includes('Extended color light')
+					? this.xyToHex(value.state.xy[0], value.state.xy[1])
+					: 'rgba(242, 247, 0, 1)',
 			});
 		});
 
