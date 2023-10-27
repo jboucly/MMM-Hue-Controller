@@ -18,7 +18,14 @@ class GenerateDom {
 
 	createLight(light) {
 		const lightContainer = document.createElement('div');
-		lightContainer.className = 'btn-group';
+		lightContainer.className = 'light-container';
+
+		const spanLabel = document.createElement('span');
+		spanLabel.className = 'light-label';
+		spanLabel.innerHTML = light.name;
+
+		const divBtnGroup = document.createElement('div');
+		divBtnGroup.className = 'btn-group';
 
 		if (light.type === 'color') {
 			const button = document.createElement('button');
@@ -28,7 +35,7 @@ class GenerateDom {
 			button.setAttribute('on', light.on);
 
 			// eslint-disable-next-line no-undef
-			this.moduleContainer.appendChild(new ColorModal(this.module, button, light).createModal());
+			this.moduleContainer.appendChild(new ColorModal(this.module, button, light).render());
 
 			const img = document.createElement('img');
 			img.src = this.module.file('./assets/imgs/palet-color.svg');
@@ -36,12 +43,15 @@ class GenerateDom {
 			img.className = 'img-palet-color';
 
 			button.appendChild(img);
-			lightContainer.appendChild(button);
+			divBtnGroup.appendChild(button);
 		}
 
+		lightContainer.appendChild(divBtnGroup);
+		lightContainer.appendChild(spanLabel);
+
 		// eslint-disable-next-line no-undef
-		const sliderContainer = new Slider(this.module, light).createSlider();
-		lightContainer.appendChild(sliderContainer);
+		const sliderContainer = new Slider(this.module, light).render();
+		divBtnGroup.appendChild(sliderContainer);
 
 		return lightContainer;
 	}

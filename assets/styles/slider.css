@@ -1,3 +1,17 @@
+.light-container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.light-label {
+	margin-top: 10px;
+	font:
+		20px Arial,
+		sans-serif;
+}
+
 .btn-group {
 	display: flex;
 	justify-content: center;

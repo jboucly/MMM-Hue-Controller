@@ -8,7 +8,7 @@ class ColorModal {
 		this.closeSpan = null;
 	}
 
-	createModal() {
+	render() {
 		this.modal = document.createElement('div');
 		this.modal.id = 'color-modal';
 		this.modal.className = 'modal';

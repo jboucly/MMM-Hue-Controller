@@ -10,7 +10,7 @@ class Slider {
 		this.colorChangeEvent = null;
 	}
 
-	createSlider() {
+	render() {
 		const sliderContainer = document.createElement('div');
 		sliderContainer.className = 'slider-container';
 
