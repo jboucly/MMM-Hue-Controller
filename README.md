@@ -17,7 +17,7 @@
 
 This project is a fork from [MMM-Hue-Controller](https://github.com/gueguet/MMM-Hue-Controller) !
 
-![screenshot](assets/MMM-Hue-Controller-2-screenshot.png)
+![screenshot](assets/imgs/MMM-Hue-Controller-2-screenshot.png)
 
 ## Feature
 

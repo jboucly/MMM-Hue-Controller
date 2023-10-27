@@ -2,9 +2,26 @@ Module.register('MMM-Hue-Controller-2', {
 	defaults: {
 		user: '',
 		bridgeIp: '',
+		color: ['#78cff2', '#2da7e4', '#f2bba0', '#f3c39a', '#50e8ff', '#94c930', '#86bc39'],
 	},
 	lightsList: [],
 	lightsListRequested: false,
+
+	getStyles: function () {
+		return [
+			this.file('./assets/styles/MMM-Hue-Controller.css'),
+			this.file('./assets/styles/modal.css'),
+			this.file('./assets/styles/slider.css'),
+		];
+	},
+
+	getScripts: function () {
+		return [
+			this.file('./assets/js/generate-dom.js'),
+			this.file('./assets/js/modal.js'),
+			this.file('./assets/js/slider.js'),
+		];
+	},
 
 	start: function () {
 		Log.info('Starting module : MMM-Hue-Controller-2');
@@ -53,46 +70,15 @@ Module.register('MMM-Hue-Controller-2', {
 		}
 	},
 
-	getStyles: function () {
-		return ['MMM-Hue-Controller.css'];
-	},
-
 	getDom: function () {
 		if (this.lightsList?.length === 0) {
 			const pElem = document.createElement('p');
 			pElem.innerHTML = 'No lights found. Waiting...';
 			return pElem;
 		} else {
-			const container = document.createElement('div');
-			container.className = 'flex-container';
-
-			this.lightsList.forEach(light => {
-				container.appendChild(this.createOnOffButton(light));
-			});
-
-			return container;
+			// eslint-disable-next-line no-undef
+			return new GenerateDom(this).createDom();
 		}
-	},
-
-	createOnOffButton: function (light) {
-		var self = this;
-		var button = document.createElement('button');
-		button.innerHTML = light.name;
-		button.className = 'hue-btn-on-off';
-		button.setAttribute('on', light.on);
-
-		button.addEventListener('click', function () {
-			if (light.on) {
-				self.sendSocketNotification('TURN_OFF_LIGHT', light.id);
-				light.on = false;
-			} else {
-				self.sendSocketNotification('TURN_ON_LIGHT', light.id);
-				light.on = true;
-			}
-			button.setAttribute('on', light.on);
-		});
-
-		return button;
 	},
 
 	// ——— UTILS ———————————————————————————————————————————————————————————
