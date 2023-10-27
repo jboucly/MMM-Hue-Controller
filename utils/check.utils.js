@@ -10,7 +10,7 @@ module.exports = {
 		return `http://${this.configs.bridgeIp}/api/${this.configs.user}/lights`;
 	},
 
-	getUrlToTurnOffLights: function (id) {
+	getUrlToChangeStateOfLight: function (id) {
 		this.checkConfigExist();
 		return `http://${this.configs.bridgeIp}/api/${this.configs.user}/lights/${id}/state`;
 	},

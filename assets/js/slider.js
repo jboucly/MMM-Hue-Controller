@@ -149,6 +149,11 @@ class Slider {
 
 			this.slider.style.top = `${100 - newValue}%`;
 			this.sliderLabel.textContent = `${newValue}%`;
+
+			this.module.sendSocketNotification('CHANGE_BRIGHTNESS', {
+				id: this.light.id,
+				brightness: newValue,
+			});
 		}
 	}
 

@@ -36,19 +36,7 @@ class GenerateDom {
 
 		// eslint-disable-next-line no-undef
 		const sliderContainer = new Slider(this.module, light).createSlider();
-
 		lightContainer.appendChild(sliderContainer);
-
-		// button.addEventListener('click', function () {
-		// 	if (light.on) {
-		// 		self.module.sendSocketNotification('TURN_OFF_LIGHT', light.id);
-		// 		light.on = false;
-		// 	} else {
-		// 		self.module.sendSocketNotification('TURN_ON_LIGHT', light.id);
-		// 		light.on = true;
-		// 	}
-		// 	button.setAttribute('on', light.on);
-		// });
 
 		return lightContainer;
 	}
